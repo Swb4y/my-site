@@ -3,7 +3,7 @@
   <% if (success) { %>
     <div id="success-message">Mesajınız gönderildi!</div>
   <% } else if (staticForm) { %>
-    <form action="mailto:<%= contactEmail %>" method="post" enctype="text/plain">
+    <form id="contact-form" action="<%= formAction %>" method="POST">
       <label for="name">Adınız:</label>
       <input type="text" id="name" name="name" required />
       <label for="email">Email:</label>

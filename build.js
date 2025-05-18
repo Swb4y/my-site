@@ -55,8 +55,8 @@ async function build() {
     if (page.route === '/contact') {
       data.success = false;
       data.staticForm = true;
-      // Use specified email address for contact form
-      data.contactEmail = 'dfrguiii45@hotmail.com';
+      // Use Formspree endpoint for static form submissions
+      data.formAction = process.env.FORMSPREE_ENDPOINT || '';
     }
     const html = await ejs.renderFile(path.join(viewsDir, page.template), data, { root: viewsDir });
     const outPath = path.join(root, page.output);
