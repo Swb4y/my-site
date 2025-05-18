@@ -72,17 +72,7 @@ async function build() {
   );
   await fs.writeFile(path.join(root, '404.html'), html404, 'utf8');
 
-  // Copy static assets (css, js, CNAME)
-  const staticDir = path.join(root, 'public');
-  const assets = await fs.readdir(staticDir);
-  for (const file of assets) {
-    const src = path.join(staticDir, file);
-    const dest = path.join(root, file);
-    const stat = await fs.stat(src);
-    if (stat.isFile()) {
-      await fs.copyFile(src, dest);
-    }
-  }
+  // Static assets (css, js, CNAME) are version-controlled in root, no need to copy from nested public
 } // end build
 
 build().catch(err => {
