@@ -74,6 +74,15 @@ app.post('/contact', async (req, res, next) => {
   }
 });
 
+// Redirect legacy .html URLs to new dynamic routes
+['index', 'about', 'contact'].forEach(page => {
+  app.get(`/${page}.html`, (req, res) => {
+    const qs = req.url.includes('?') ? req.url.substring(req.url.indexOf('?')) : '';
+    const target = page === 'index' ? '/' : `/${page}`;
+    res.redirect(301, target + qs);
+  });
+});
+
 app.use((req, res) => {
   res.status(404).render('404', {
     title: '404 - Sayfa Bulunamadı',
