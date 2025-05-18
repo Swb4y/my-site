@@ -1,5 +1,11 @@
-const ejs = require('ejs');
+// Load environment variables (fallback to .env.example if .env missing)
+const dotenv = require('dotenv');
 const path = require('path');
+const envResult = dotenv.config();
+if (envResult.error || !process.env.CONTACT_EMAIL) {
+  dotenv.config({ path: path.join(__dirname, '.env.example') });
+}
+const ejs = require('ejs');
 const fs = require('fs').promises;
 
 // Page metadata
@@ -46,7 +52,11 @@ async function build() {
   // Render pages
   for (const page of pages) {
     const data = { ...pageData[page.route] };
-    if (page.route === '/contact') data.success = false;
+    if (page.route === '/contact') {
+      data.success = false;
+      data.staticForm = true;
+      data.contactEmail = process.env.CONTACT_EMAIL || '';
+    }
     const html = await ejs.renderFile(path.join(viewsDir, page.template), data, { root: viewsDir });
     const outPath = path.join(root, page.output);
     await fs.mkdir(path.dirname(outPath), { recursive: true });

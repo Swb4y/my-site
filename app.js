@@ -46,7 +46,12 @@ app.get('/about', (req, res) => {
 
 app.get('/contact', (req, res) => {
   const success = req.query.success === '1';
-  res.render('contact', { ...pageData['/contact'], success });
+  res.render('contact', {
+    ...pageData['/contact'],
+    success,
+    staticForm: false,
+    contactEmail: process.env.CONTACT_EMAIL || ''
+  });
 });
 
 app.post('/contact', async (req, res, next) => {
