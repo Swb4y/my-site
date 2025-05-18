@@ -46,10 +46,13 @@ app.get('/about', (req, res) => {
 
 app.get('/contact', (req, res) => {
   const success = req.query.success === '1';
+  // Determine if SMTP is configured for dynamic email
+  const SMTP_CONFIGURED = process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS && process.env.CONTACT_EMAIL;
   res.render('contact', {
     ...pageData['/contact'],
     success,
-    staticForm: false,
+    // Fallback to static mailto form when SMTP not set
+    staticForm: !SMTP_CONFIGURED,
     contactEmail: process.env.CONTACT_EMAIL || ''
   });
 });
