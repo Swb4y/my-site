@@ -126,7 +126,7 @@ app.use((req, res) => {
   });
 });
 
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   logger.error(err.stack);
   res.status(500).render('500', {
     title: `500 - Sunucu Hatası - ${siteName}`,
