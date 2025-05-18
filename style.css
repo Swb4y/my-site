@@ -1,0 +1,100 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f4f4f4;
+}
+header, footer {
+  background: #333;
+  color: #fff;
+  text-align: center;
+  padding: 1em 0;
+}
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  background: #444;
+}
+nav ul li {
+  margin: 0 1em;
+}
+nav ul li a {
+  color: #fff;
+  text-decoration: none;
+}
+main {
+  flex: 1;
+  background: #fff;
+  margin: 1em auto;
+  max-width: 960px;
+  padding: 2em;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+form {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  margin: 0 auto;
+}
+form label {
+  margin-top: 1em;
+}
+form input, form textarea {
+  padding: 0.5em;
+  margin-top: 0.5em;
+}
+form button {
+  margin-top: 1em;
+  padding: 0.7em;
+  background: #333;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+form button:hover {
+  background: #555;
+}
+
+/* 3D rotating cube banner */
+.banner-3d {
+  perspective: 800px;
+  padding: 2em 0;
+}
+.cube {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+  position: relative;
+  transform-style: preserve-3d;
+  animation: rotateCube 10s infinite linear;
+}
+.face {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: #333;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1em;
+  opacity: 0.9;
+  border: 2px solid #fff;
+}
+.front  { transform: rotateY(0deg)   translateZ(100px); }
+.back   { transform: rotateY(180deg) translateZ(100px); }
+.right  { transform: rotateY(90deg)  translateZ(100px); }
+.left   { transform: rotateY(-90deg) translateZ(100px); }
+.top    { transform: rotateX(90deg)  translateZ(100px); }
+.bottom { transform: rotateX(-90deg) translateZ(100px); }
+
+@keyframes rotateCube {
+  from { transform: rotateX(0deg) rotateY(0deg); }
+  to   { transform: rotateX(360deg) rotateY(360deg); }
+}
