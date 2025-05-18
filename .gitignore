@@ -1,0 +1,4 @@
+/.env
+/my-site/.env
+# Ignore Zone.Identifier files
+*Zone.Identifier
