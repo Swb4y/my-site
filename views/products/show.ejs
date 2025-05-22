@@ -1,0 +1,17 @@
+<%- include('../partials/header') %>
+
+<div class="product-detail">
+  <img src="<%= product.image %>" alt="<%= product.name %>">
+  <h1><%= product.name %></h1>
+  <p><%= product.description %></p>
+  <p class="price"><%= product.price.toFixed(2) %> TL</p>
+  <button onclick="addToCart({
+      id: '<%= product._id %>',
+      name: '<%= product.name %>',
+      price: <%= product.price %>
+    })">
+    Sepete Ekle
+  </button>
+</div>
+
+<%- include('../partials/footer') %>

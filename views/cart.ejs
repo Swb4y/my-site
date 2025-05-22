@@ -1,0 +1,20 @@
+<%- include('partials/header') %>
+
+<h1>Sepetiniz</h1>
+<div id="cart-items"></div>
+
+<script>
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const container = document.getElementById('cart-items');
+  if (!cart.length) {
+    container.innerHTML = '<p>Sepetiniz boş</p>';
+  } else {
+    cart.forEach(item => {
+      const div = document.createElement('div');
+      div.innerHTML = `<strong>${item.name}</strong> — ${item.price.toFixed(2)} TL`;
+      container.appendChild(div);
+    });
+  }
+</script>
+
+<%- include('partials/footer') %>

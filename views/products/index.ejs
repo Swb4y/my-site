@@ -1,0 +1,15 @@
+<%- include('../partials/header') %>
+
+<h1>Ürünlerimiz</h1>
+<div class="products-grid">
+  <% products.forEach(p => { %>
+    <div class="card">
+      <img src="<%= p.image %>" alt="<%= p.name %>">
+      <h2><%= p.name %></h2>
+      <p><%= p.price.toFixed(2) %> TL</p>
+      <a href="/products/<%= p._id %>">Detay</a>
+    </div>
+  <% }) %>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,5 +1,82 @@
 require('dotenv').config();
+// app.js
+
+// en üstte: 
+const productRoutes = require('./routes/products');
+const cartRoutes = require('./routes/cart');
+app.use('/cart', cartRoutes);
+
+// … mevcut middleware’ler (static, morgan, bodyParser vs.)…
+
+app.use('/products', productRoutes);
+// oturum & auth
+const session  = require('express-session');
+const paypalRoutes = require('./routes/paypal');
+app.use('/paypal', paypalRoutes);
+const paymentRoutes = require('./routes/payments');
+app.use('/payments', paymentRoutes);
+const adminRoutes = require('./routes/admin');
+app.use('/admin', adminRoutes);
+const authRoutes = require('./routes/auth');
+app.use('/', authRoutes);
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const User     = require('./models/User');
+const flash    = require('connect-flash');
+
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'gizlikelime',
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Local strateji
+passport.use(new LocalStrategy(async (username, password, done) => {
+  try {
+    const user = await User.findOne({ username });
+    if (!user) return done(null, false, { message: 'Kullanıcı bulunamadı' });
+    const ok = await user.comparePassword(password);
+    if (!ok) return done(null, false, { message: 'Şifre yanlış' });
+    return done(null, user);
+  } catch (err) { return done(err); }
+}));
+
+passport.serializeUser((user, done) => done(null, user.id));
+passport.deserializeUser(async (id, done) => {
+  const user = await User.findById(id);
+  done(null, user);
+});
+
+// flash mesajları view’lara gönder
+app.use((req, res, next) => {
+  res.locals.error = req.flash('error');
+  res.locals.success = req.flash('success');
+  res.locals.currentUser = req.user;
+  next();
+});
+
+
 const express = require('express');
+// app.js
+
+require('dotenv').config();
+const mongoose = require('mongoose');
+
+// … Express, morgan, ejs vs. importları…
+
+// ◀▶  MongoDB bağlantısı
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log('✅ MongoDB’ye bağlandı'))
+.catch(err => console.error('❌ MongoDB bağlantı hatası:', err));
+
+// … geri kalan app konfigurasyonu …
+
 const path = require('path');
 const morgan = require('morgan');
 const nodemailer = require('nodemailer');

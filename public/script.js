@@ -1,3 +1,20 @@
+// public/script.js
+
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+function addToCart(item) {
+  cart.push(item);
+  localStorage.setItem('cart', JSON.stringify(cart));
+  document.getElementById('cart-count').textContent = cart.length;
+  alert('Ürün sepete eklendi!');
+}
+
+// Sayfa yüklendiğinde sepeti güncelle
+document.addEventListener('DOMContentLoaded', () => {
+  const cnt = cart.length;
+  const badge = document.getElementById('cart-count');
+  if (badge) badge.textContent = cnt;
+});
 document.getElementById('contact-form')?.addEventListener('submit', async function (e) {
   e.preventDefault();
   const form = e.target;
