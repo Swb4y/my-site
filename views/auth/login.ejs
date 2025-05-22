@@ -1,0 +1,27 @@
+<%- include('../partials/header', {
+  title: 'Giriş Yap',
+  description: '',
+  keywords: 'giriş, login',
+  headerTitle: 'Giriş Yap'
+}) %>
+<main>
+  <% if (success && success.length) { %>
+    <div class="flash-success"><%= success[0] %></div>
+  <% } %>
+  <% if (error && error.length) { %>
+    <div class="flash-error"><%= error[0] %></div>
+  <% } %>
+  <form action="/login" method="POST">
+    <div>
+      <label for="username">Kullanıcı Adı:</label>
+      <input type="text" id="username" name="username" required />
+    </div>
+    <div>
+      <label for="password">Şifre:</label>
+      <input type="password" id="password" name="password" required />
+    </div>
+    <button type="submit">Giriş Yap</button>
+  </form>
+  <p>Hesabınız yok mu? <a href="/register">Kayıt Ol</a></p>
+</main>
+<%- include('../partials/footer') %>
