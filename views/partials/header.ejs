@@ -35,6 +35,9 @@
     <li><a href="/products">Ürünler</a></li>
     <li><a href="/cart">Sepet (<span id="cart-count">0</span>)</a></li>
     <li><a href="/contact">İletişim</a></li>
+    <% if (currentUser && currentUser.role === 'admin') { %>
+      <li><a href="/admin">Admin Panel</a></li>
+    <% } %>
   </ul>
 </nav>
 <script src="/script.js"></script>
