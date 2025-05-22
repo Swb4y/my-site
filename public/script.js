@@ -2,6 +2,7 @@
 
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
+/* eslint-disable-next-line no-unused-vars */
 function addToCart(item) {
   cart.push(item);
   localStorage.setItem('cart', JSON.stringify(cart));
