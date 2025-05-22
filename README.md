@@ -20,9 +20,18 @@ Modern and flexible static web template with dynamic server features (Express, E
    ```bash
    npm install
    ```
-2. Create `.env` file based on `.env.example` and fill in values
-   ```bash
-   cp .env.example .env
+2. Create your environment file with production credentials:
+   • Rename `g.env` (if provided) to `.env` or create a `g.env` file at the project root.
+   • Make sure `g.env` is added to `.gitignore` to keep it private.
+3. For Docker Compose, make sure `docker-compose.yml` loads `g.env`:
+   ```yaml
+   services:
+     web:
+       build: .
+       ports:
+         - '3000:3000'
+       env_file:
+         - g.env
    ```
 3. Run the application
    ```bash
@@ -35,9 +44,9 @@ Modern and flexible static web template with dynamic server features (Express, E
 4. Access at `http://localhost:3000`
 
 ## Docker
-Build and run with Docker Compose:
+Build and run with Docker Compose (reads `g.env` for env vars):
 ```bash
-docker-compose up --build
+docker-compose up -d --build
 ```
 
 ## Linting

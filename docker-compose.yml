@@ -4,11 +4,6 @@ services:
     build: .
     ports:
       - '3000:3000'
-    environment:
-      - PORT=3000
-      - SMTP_HOST
-      - SMTP_PORT
-      - SMTP_SECURE
-      - SMTP_USER
-      - SMTP_PASS
-      - CONTACT_EMAIL
+    # Load environment variables from g.env (ensure it's not committed to the repo)
+    env_file:
+      - g.env

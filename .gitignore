@@ -6,6 +6,7 @@
 # Environment
 .env
 .env.*.local
+g.env
 
 # Logs
 npm-debug.log*
