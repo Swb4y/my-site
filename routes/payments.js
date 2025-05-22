@@ -1,8 +1,16 @@
 const express = require('express');
 const router  = express.Router();
-const stripe  = require('stripe')(process.env.STRIPE_SECRET_KEY);
+let stripe;
+if (process.env.STRIPE_SECRET_KEY) {
+  stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+} else {
+  console.warn('Stripe secret key not configured, payments endpoint disabled.');
+}
 
 router.post('/create-checkout-session', async (req, res) => {
+  if (!stripe) {
+    return res.status(503).json({ error: 'Stripe not configured' });
+  }
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
     line_items: req.body.items.map(i => ({

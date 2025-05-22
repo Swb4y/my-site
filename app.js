@@ -1,29 +1,41 @@
 require('dotenv').config();
-// app.js
-
-// en üstte: 
-const productRoutes = require('./routes/products');
-const cartRoutes = require('./routes/cart');
-app.use('/cart', cartRoutes);
-
-// … mevcut middleware’ler (static, morgan, bodyParser vs.)…
-
-app.use('/products', productRoutes);
-// oturum & auth
-const session  = require('express-session');
-const paypalRoutes = require('./routes/paypal');
-app.use('/paypal', paypalRoutes);
-const paymentRoutes = require('./routes/payments');
-app.use('/payments', paymentRoutes);
-const adminRoutes = require('./routes/admin');
-app.use('/admin', adminRoutes);
-const authRoutes = require('./routes/auth');
-app.use('/', authRoutes);
+const express = require('express');
+const path = require('path');
+const morgan = require('morgan');
+const fs = require('fs');
+const mongoose = require('mongoose');
+const session = require('express-session');
+const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const User     = require('./models/User');
-const flash    = require('connect-flash');
+const nodemailer = require('nodemailer');
 
+const productRoutes = require('./routes/products');
+const cartRoutes = require('./routes/cart');
+const paypalRoutes = require('./routes/paypal');
+const paymentRoutes = require('./routes/payments');
+const adminRoutes = require('./routes/admin');
+const authRoutes = require('./routes/auth');
+
+const User = require('./models/User');
+
+const app = express();
+const port = process.env.PORT || 3000;
+
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+  .then(() => console.log('✅ MongoDB’ye bağlandı'))
+  .catch(err => console.error('❌ MongoDB bağlantı hatası:', err));
+
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
+app.use(morgan('combined', { stream: fs.createWriteStream('access.log', { flags: 'a' }) }));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 app.use(session({
   secret: process.env.SESSION_SECRET || 'gizlikelime',
   resave: false,
@@ -33,7 +45,6 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Local strateji
 passport.use(new LocalStrategy(async (username, password, done) => {
   try {
     const user = await User.findOne({ username });
@@ -41,16 +52,20 @@ passport.use(new LocalStrategy(async (username, password, done) => {
     const ok = await user.comparePassword(password);
     if (!ok) return done(null, false, { message: 'Şifre yanlış' });
     return done(null, user);
-  } catch (err) { return done(err); }
+  } catch (err) {
+    return done(err);
+  }
 }));
-
 passport.serializeUser((user, done) => done(null, user.id));
 passport.deserializeUser(async (id, done) => {
-  const user = await User.findById(id);
-  done(null, user);
+  try {
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (err) {
+    done(err);
+  }
 });
 
-// flash mesajları view’lara gönder
 app.use((req, res, next) => {
   res.locals.error = req.flash('error');
   res.locals.success = req.flash('success');
@@ -58,39 +73,12 @@ app.use((req, res, next) => {
   next();
 });
 
-
-const express = require('express');
-// app.js
-
-require('dotenv').config();
-const mongoose = require('mongoose');
-
-// … Express, morgan, ejs vs. importları…
-
-// ◀▶  MongoDB bağlantısı
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log('✅ MongoDB’ye bağlandı'))
-.catch(err => console.error('❌ MongoDB bağlantı hatası:', err));
-
-// … geri kalan app konfigurasyonu …
-
-const path = require('path');
-const morgan = require('morgan');
-const nodemailer = require('nodemailer');
-
-const app = express();
-const port = process.env.PORT || 3000;
-
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-
-app.use(morgan('combined', { stream: require('fs').createWriteStream('access.log', { flags: 'a' }) }));
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
+app.use('/cart', cartRoutes);
+app.use('/products', productRoutes);
+app.use('/paypal', paypalRoutes);
+app.use('/payments', paymentRoutes);
+app.use('/admin', adminRoutes);
+app.use('/', authRoutes);
 
 const pageData = {
   '/': {
@@ -112,6 +100,7 @@ const pageData = {
     headerTitle: 'İletişim'
   }
 };
+
 
 app.get('/', (req, res) => {
   res.render('index', pageData['/']);
