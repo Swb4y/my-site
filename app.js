@@ -18,6 +18,7 @@ const adminRoutes = require('./routes/admin');
 const authRoutes = require('./routes/auth');
 
 const User = require('./models/User');
+const Product = require('./models/Product');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -102,12 +103,30 @@ const pageData = {
 };
 
 
-app.get('/', (req, res) => {
-  res.render('index', pageData['/']);
+app.get('/', async (req, res, next) => {
+  try {
+    // Öne çıkan ürünleri getir (örnek: ilk 6 ürün)
+    const products = await Product.find().limit(6);
+    res.render('index', {
+      ...pageData['/'],
+      products
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
-app.get('/about', (req, res) => {
-  res.render('about', pageData['/about']);
+app.get('/about', async (req, res, next) => {
+  try {
+    // Birkaç ürün örneği göster
+    const products = await Product.find().limit(3);
+    res.render('about', {
+      ...pageData['/about'],
+      products
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.get('/contact', (req, res) => {

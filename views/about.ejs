@@ -1,5 +1,23 @@
 <%- include('partials/header', { title, description, keywords, headerTitle }) %>
 <main>
-  <p>Biz, abantari.com bünyesinde sizin için modern, hızlı ve şık çözümler üreten dinamik bir ekibiz.</p>
+  <section class="about-info">
+    <p>Biz, abantari.com bünyesinde sizin için modern, hızlı ve şık çözümler üreten dinamik bir ekibiz.</p>
+  </section>
+  <% if (products && products.length) { %>
+    <section class="featured-products">
+      <h2>En Yeni Ürünler</h2>
+      <div class="products-grid">
+        <% products.forEach(p => { %>
+          <div class="card">
+            <img src="<%= p.image %>" alt="<%= p.name %>">
+            <h3><%= p.name %></h3>
+            <p class="price"><%= p.price.toFixed(2) %> TL</p>
+            <button onclick="addToCart({ id: '<%= p._id %>', name: '<%= p.name %>', price: <%= p.price %> })">Sepete Ekle</button>
+            <a href="/products/<%= p._id %>">Detay</a>
+          </div>
+        <% }) %>
+      </div>
+    </section>
+  <% } %>
 </main>
 <%- include('partials/footer') %>
