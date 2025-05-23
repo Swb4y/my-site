@@ -61,43 +61,6 @@ form button:hover {
   background: #555;
 }
 
-/* 3D rotating cube banner */
-.banner-3d {
-  perspective: 800px;
-  padding: 2em 0;
-}
-.cube {
-  width: 200px;
-  height: 200px;
-  margin: 0 auto;
-  position: relative;
-  transform-style: preserve-3d;
-  animation: rotateCube 10s infinite linear;
-}
-.face {
-  position: absolute;
-  width: 200px;
-  height: 200px;
-  background: #333;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1em;
-  opacity: 0.9;
-  border: 2px solid #fff;
-}
-.front  { transform: rotateY(0deg)   translateZ(100px); }
-.back   { transform: rotateY(180deg) translateZ(100px); }
-.right  { transform: rotateY(90deg)  translateZ(100px); }
-.left   { transform: rotateY(-90deg) translateZ(100px); }
-.top    { transform: rotateX(90deg)  translateZ(100px); }
-.bottom { transform: rotateX(-90deg) translateZ(100px); }
-
-@keyframes rotateCube {
-  from { transform: rotateX(0deg) rotateY(0deg); }
-  to   { transform: rotateX(360deg) rotateY(360deg); }
-}
 /* Mevcut genel stiller… */
 
 /* Grid kart düzeni */
