@@ -12,7 +12,6 @@ const nodemailer = require('nodemailer');
 
 const productRoutes = require('./routes/products');
 const cartRoutes = require('./routes/cart');
-const paypalRoutes = require('./routes/paypal');
 const paymentRoutes = require('./routes/payments');
 const adminRoutes = require('./routes/admin');
 const authRoutes = require('./routes/auth');
@@ -76,7 +75,12 @@ app.use((req, res, next) => {
 
 app.use('/cart', cartRoutes);
 app.use('/products', productRoutes);
-app.use('/paypal', paypalRoutes);
+if (process.env.PAYPAL_CLIENT_ID && process.env.PAYPAL_CLIENT_SECRET) {
+  const paypalRoutes = require('./routes/paypal');
+  app.use('/paypal', paypalRoutes);
+} else {
+  console.warn('PayPal credentials not set. Skipping PayPal routes.');
+}
 app.use('/payments', paymentRoutes);
 app.use('/admin', adminRoutes);
 app.use('/', authRoutes);
