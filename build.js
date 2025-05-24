@@ -53,7 +53,8 @@ async function build() {
   for (const page of pages) {
     const data = {
       ...pageData[page.route],
-      currentUser: null
+      currentUser: null,
+      products: []
     };
     if (page.route === '/contact') {
       data.success = false;
