@@ -51,7 +51,10 @@ async function build() {
 
   // Render pages
   for (const page of pages) {
-    const data = { ...pageData[page.route] };
+    const data = {
+      ...pageData[page.route],
+      currentUser: null
+    };
     if (page.route === '/contact') {
       data.success = false;
       data.staticForm = true;
