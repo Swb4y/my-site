@@ -71,7 +71,14 @@ async function build() {
   // 404 page
   const html404 = await ejs.renderFile(
     path.join(viewsDir, '404.ejs'),
-    { title: '404 - Sayfa Bulunamadı', description: '', keywords: '', headerTitle: 'Hata' },
+    {
+      title: '404 - Sayfa Bulunamadı',
+      description: '',
+      keywords: '',
+      headerTitle: 'Hata',
+      currentUser: null,
+      products: []
+    },
     { root: viewsDir }
   );
   await fs.writeFile(path.join(root, '404.html'), html404, 'utf8');
