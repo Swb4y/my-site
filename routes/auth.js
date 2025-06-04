@@ -31,10 +31,12 @@ router.post('/login',
 );
 
 // çıkış
-router.get('/logout', (req, res) => {
-  req.logout();
-  req.flash('success','Çıkış yapıldı');
-  res.redirect('/');
+router.get('/logout', (req, res, next) => {
+  req.logout(err => {
+    if (err) { return next(err); }
+    req.flash('success', 'Çıkış yapıldı');
+    res.redirect('/');
+  });
 });
 
 module.exports = router;
